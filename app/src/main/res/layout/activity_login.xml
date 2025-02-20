@@ -4,86 +4,88 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e77a77"
     android:gravity="center"
     android:orientation="vertical"
-    android:background="@drawable/gradient_background"
     tools:context=".LoginActivity">
 
         <!-- Tarjeta blanca centrada -->
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:orientation="vertical"
-            android:background="@android:color/white"
-            android:padding="24dp"
-            android:elevation="6dp"
             android:layout_margin="16dp"
-            android:gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="32dp"
-            android:backgroundTint="@android:color/white"
+            android:background="#f9df94"
+            android:backgroundTint="#f9df94"
             android:clipToOutline="true"
-            android:layout_centerInParent="true">
+            android:elevation="6dp"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:padding="24dp">
 
                 <!-- Título -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login"
-                    android:textSize="24sp"
-                    android:textStyle="bold"
+                    android:layout_marginBottom="16dp"
+                    android:fontFamily="cursive"
+                    android:text="PeetSeek"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="16dp" />
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
 
                 <!-- Campo Usuario -->
                 <EditText
                     android:id="@+id/username"
+                    style="@style/EditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:drawableStart="@android:drawable/ic_menu_myplaces"
                     android:hint="Username"
-                    android:inputType="textPersonName"
-                    style="@style/EditTextStyle"
-                    android:drawableStart="@android:drawable/ic_menu_myplaces"/>
+                    android:inputType="textPersonName" />
 
                 <!-- Campo Contraseña -->
                 <EditText
                     android:id="@+id/password"
+                    style="@style/EditTextStyle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Password"
-                    android:inputType="textPassword"
-                    style="@style/EditTextStyle"
+                    android:layout_marginTop="8dp"
                     android:drawableStart="@android:drawable/ic_lock_idle_lock"
-                    android:layout_marginTop="8dp"/>
+                    android:hint="Password"
+                    android:inputType="textPassword" />
 
                 <!-- Botón de login -->
                 <Button
                     android:id="@+id/login_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Login"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/purple_500"
+                    android:backgroundTint="#54343f"
+                    android:fontFamily="sans-serif-thin"
+                    android:text="Login"
                     android:textColor="@android:color/white" />
                 <!-- Botón Olvidé mi Contraseña -->
                 <TextView
                     android:id="@+id/forgot_password_button"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Forgot Password?"
                     android:layout_marginTop="16dp"
-                    android:textColor="@android:color/holo_blue_dark" />
+                    android:text="Forgot Password?"
+                    android:textColor="@color/design_default_color_on_secondary" />
 
                 <!-- Enlace para registrarse -->
                 <TextView
                     android:id="@+id/register_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Don't have an account? SIGN UP"
-                    android:textColor="@android:color/holo_blue_dark"
-                    android:textSize="16sp"
+                    android:layout_gravity="center"
                     android:layout_marginTop="16dp"
-                    android:layout_gravity="center" />
+                    android:text="Don't have an account? SIGN UP"
+                    android:textColor="@android:color/background_dark"
+                    android:textSize="16sp" />
         </LinearLayout>
 </LinearLayout>

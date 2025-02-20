@@ -34,7 +34,7 @@ public class PetListActivity extends AppCompatActivity {
         petAdapter = new PetAdapter(petList, new PetAdapter.OnItemClickListener() {
             @Override
             public void onMessageClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Mensaje a: " + pet.getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(PetListActivity.this, "Mensaje a: " + pet.getReporterName(), Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -64,7 +64,7 @@ public class PetListActivity extends AppCompatActivity {
     }
 
     private void fetchPets() {
-        String url = "http://10.0.2.2/petfinder/get_pets.php";  // URL para obtener mascotas
+        String url = "http://192.168.1.11/petfinder/get_pets.php";  // URL para obtener mascotas
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {
@@ -75,12 +75,12 @@ public class PetListActivity extends AppCompatActivity {
                             JSONObject petObject = petsArray.getJSONObject(i);
                             Pet pet = new Pet(
                                     petObject.getInt("id"),
-                                    petObject.getString("NAME"),
+                                    petObject.getString("name"),
                                     petObject.getString("breed"),
                                     petObject.getString("age"),
-                                    petObject.getString("description"),  // Asegúrate de tener esta clave en el JSON
-                                    petObject.getString("reporterName"),  // Asegúrate de tener esta clave en el JSON
-                                    petObject.getString("imageUrl")      // Asegúrate de tener esta clave en el JSON
+                                    petObject.getString("description"),
+                                    petObject.getString("reporterName"),
+                                    petObject.getString("imageUrl")
                             );
 
                             petList.add(pet);

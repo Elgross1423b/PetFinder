@@ -31,8 +31,10 @@ android {
     }
 }
 
-dependencies {
 
+dependencies {
+    implementation("com.google.android.gms:play-services-maps:18.0.2")  // Asegúrate de tener la última versión
+    implementation("com.google.android.gms:play-services-location:18.0.0") // Para acceso a la ubicación
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.android.volley:volley:1.2.1")
     implementation("androidx.recyclerview:recyclerview:1.2.1")

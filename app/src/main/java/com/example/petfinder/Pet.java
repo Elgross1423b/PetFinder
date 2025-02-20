@@ -1,14 +1,14 @@
-// Pet.java
 package com.example.petfinder;
 
 public class Pet {
-    private final int id;  // Declarado como 'final'
-    private final String name;
-    private final String breed;
-    private final String age;
-    private final String description;
-    private final String reporterName;
-    private final String imageUrl;
+
+    private int id;
+    private String name;
+    private String breed;
+    private String age;
+    private String description;
+    private String reporterName;
+    private String imageUrl;
 
     public Pet(int id, String name, String breed, String age, String description, String reporterName, String imageUrl) {
         this.id = id;
@@ -20,11 +20,32 @@ public class Pet {
         this.imageUrl = imageUrl;
     }
 
-    public int getId() { return id; }
-    public String getName() { return name; }
-    public String getBreed() { return breed; }
-    public String getAge() { return age; }
-    public String getDescription() { return description; }
-    public String getReporterName() { return reporterName; }
-    public String getImageUrl() { return imageUrl; }
+    // Getters
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
+    public String getAge() {
+        return age;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public String getReporterName() {
+        return reporterName;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
 }

@@ -4,8 +4,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,13 +32,24 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
         holder.name.setText(pet.getName());
         holder.breed.setText(pet.getBreed());
         holder.age.setText(pet.getAge());
+        holder.description.setText(pet.getDescription());
+        holder.reporterName.setText(pet.getReporterName());
+
+        // Cargar la imagen (ejemplo con Glide o Picasso)
+        // Glide.with(holder.itemView.getContext()).load(pet.getImageUrl()).into(holder.petImage);
 
         // Asignar los listeners a los botones
         holder.messageButton.setOnClickListener(v -> listener.onMessageClick(pet));
         holder.commentButton.setOnClickListener(v -> listener.onCommentClick(pet));
         holder.shareButton.setOnClickListener(v -> listener.onShareClick(pet));
         holder.saveButton.setOnClickListener(v -> listener.onSaveClick(pet));
-        holder.likeButton.setOnClickListener(v -> listener.onLikeClick(pet));
+
+        // Configurar el botón de like para alternar su estado
+        holder.likeButton.setOnClickListener(v -> {
+            boolean isSelected = holder.likeButton.isSelected();
+            holder.likeButton.setSelected(!isSelected);
+            listener.onLikeClick(pet);
+        });
     }
 
     @Override
@@ -47,14 +58,18 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     }
 
     public static class PetViewHolder extends RecyclerView.ViewHolder {
-        TextView name, breed, age;
+        TextView name, breed, age, description, reporterName;
         Button messageButton, commentButton, shareButton, saveButton, likeButton;
+        ImageView petImage;
 
         public PetViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.petName);
-            breed = itemView.findViewById(R.id.petBreed);
-            age = itemView.findViewById(R.id.petAge);
+            petImage = itemView.findViewById(R.id.petImageView);
+            name = itemView.findViewById(R.id.nameTextView);
+            breed = itemView.findViewById(R.id.breedTextView);
+            age = itemView.findViewById(R.id.ageTextView);
+            description = itemView.findViewById(R.id.descriptionTextView);
+            reporterName = itemView.findViewById(R.id.reporterNameTextView);
             messageButton = itemView.findViewById(R.id.messageButton);
             commentButton = itemView.findViewById(R.id.commentButton);
             shareButton = itemView.findViewById(R.id.shareButton);
