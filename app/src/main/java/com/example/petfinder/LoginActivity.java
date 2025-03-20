@@ -2,6 +2,7 @@ package com.example.petfinder;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -64,13 +65,15 @@ public class LoginActivity extends AppCompatActivity {
 
     // Método para hacer login
     private void login(String username, String password) {
-        String url = "http://10.0.2.2/petfinder/login.php"; // URL del servidor para hacer login
+        String url = "http://192.168.1.1/petfinder/login.php"; // URL del servidor para hacer login
 
         // Enviar solicitud de inicio de sesión
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
                     try {
+                        Log.d("LoginResponse", response);
                         JSONObject jsonResponse = new JSONObject(response);
+
                         String status = jsonResponse.getString("status");
                         String message = jsonResponse.getString("message");
 
@@ -86,7 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 },
                 error -> {
-                    Toast.makeText(LoginActivity.this, "Server communication failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this,"Server communication failed", Toast.LENGTH_SHORT).show();
                 }
         ) {
             @Override

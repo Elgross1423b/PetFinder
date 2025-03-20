@@ -18,6 +18,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class PetListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
@@ -64,7 +65,7 @@ public class PetListActivity extends AppCompatActivity {
     }
 
     private void fetchPets() {
-        String url = "http://192.168.1.11/petfinder/get_pets.php";  // URL para obtener mascotas
+        String url = "http://192.168.1.139/petfinder/get_pets.php";  // URL para obtener mascotas
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
                 response -> {

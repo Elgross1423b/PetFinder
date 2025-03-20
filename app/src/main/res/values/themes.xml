@@ -6,4 +6,10 @@
     </style>
 
     <style name="Theme.PetFinder" parent="Base.Theme.PetFinder" />
+    <style name="Theme.PetFinder.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+    <style name="Theme.PetFinder.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.PetFinder.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>
