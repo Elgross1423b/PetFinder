@@ -22,4 +22,10 @@
         android:name="com.example.petfinder.ui.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
+
+    <fragment
+        android:id="@+id/map"
+        android:name="com.example.petfinder.ui.slideshow.SlideshowFragment"
+        android:label="@string/menu_map"
+        tools:layout="@layout/fragment_main_maps_" />
 </navigation>

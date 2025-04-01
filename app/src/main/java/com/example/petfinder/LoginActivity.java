@@ -41,8 +41,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // Acción para el botón de login
         loginButton.setOnClickListener(view -> {
+            //Salto temporal del login
+
+
             String user = username.getText().toString().trim();
             String pass = password.getText().toString().trim();
+
 
             if (!user.isEmpty() && !pass.isEmpty()) {
                 login(user, pass);
@@ -66,7 +70,10 @@ public class LoginActivity extends AppCompatActivity {
     // Método para hacer login
     private void login(String username, String password) {
         String url = "http://192.168.1.1/petfinder/login.php"; // URL del servidor para hacer login
-
+        if (username.equals("*") && password.equals("*")) {
+            startActivity(new Intent(LoginActivity.this, PetListActivity.class));
+            Toast.makeText(this,"Ingresando como usuario de pruebas", Toast.LENGTH_SHORT).show();
+        }
         // Enviar solicitud de inicio de sesión
         StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
                 response -> {
