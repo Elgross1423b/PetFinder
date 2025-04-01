@@ -21,12 +21,13 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#00836262"
+            android:background="@android:color/system_outline_disabled"
             android:gravity="center"
             android:text="Publicaciones"
             android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
+
     </LinearLayout>
 
     <!-- Top Bar with Profile and Date -->
@@ -154,40 +155,37 @@ Es amigable pero puede estar asustado."
         <Button
             android:id="@+id/likeButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="8dp"
-            android:text="like"
-            android:textColor="@color/material_dynamic_primary50"
-            android:textSize="0sp"
-            android:padding="8dp"
-            android:foreground="?attr/selectableItemBackgroundBorderless" />
+            android:drawablePadding="4dp"
+            android:text="Me gusta"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/messageButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_comment"
-            android:drawablePadding="8dp"
-            android:text=""
-            android:textColor="@android:color/transparent"
-            android:textSize="0sp"
-            android:padding="8dp"
-            android:foreground="?attr/selectableItemBackgroundBorderless" />
+            android:drawablePadding="4dp"
+            android:text="Mensaje"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
 
         <Button
             android:id="@+id/shareButton"
             android:layout_width="0dp"
-            android:layout_height="48dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_share"
-            android:drawablePadding="8dp"
-            android:text=""
-            android:textColor="@android:color/transparent"
-            android:textSize="0sp"
-            android:padding="8dp"
-            android:foreground="?attr/selectableItemBackgroundBorderless" />
+            android:drawablePadding="4dp"
+            android:text="Compartir"
+            android:textColor="@android:color/black"
+            android:textSize="12sp" />
     </LinearLayout>
 </LinearLayout>

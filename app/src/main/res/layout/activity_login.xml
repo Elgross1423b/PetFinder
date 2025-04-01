@@ -4,10 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e77a77"
+    android:background="@color/material_dynamic_primary50"
     android:gravity="center"
     android:orientation="vertical"
     tools:context=".LoginActivity">
+
+        <!-- Logo de la aplicación -->
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_app_logo" />
 
         <!-- Tarjeta blanca centrada -->
         <LinearLayout
@@ -16,10 +24,10 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_margin="16dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="0dp"
             android:layout_marginBottom="32dp"
-            android:background="#f9df94"
-            android:backgroundTint="#f9df94"
+
+            android:background="@drawable/rounded_gray_bg"
             android:clipToOutline="true"
             android:elevation="6dp"
             android:gravity="center_horizontal"
@@ -61,13 +69,14 @@
                 <!-- Botón de login -->
                 <Button
                     android:id="@+id/login_button"
-                    android:layout_width="wrap_content"
+                    android:layout_width="119dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="#54343f"
-                    android:fontFamily="sans-serif-thin"
+                    android:backgroundTint="@color/common_google_signin_btn_text_dark_focused"
+                    android:fontFamily="sans-serif-black"
                     android:text="Login"
                     android:textColor="@android:color/white" />
+
                 <!-- Botón Olvidé mi Contraseña -->
                 <TextView
                     android:id="@+id/forgot_password_button"
@@ -86,6 +95,6 @@
                     android:layout_marginTop="16dp"
                     android:text="Don't have an account? SIGN UP"
                     android:textColor="@android:color/background_dark"
-                    android:textSize="16sp" />
+                    android:textSize="12sp" />
         </LinearLayout>
 </LinearLayout>
