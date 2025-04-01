@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
-    android:background="@drawable/gradient_background"
+    android:background="@drawable/rounded_gray_bg"
     android:elevation="4dp"
     android:orientation="vertical"
-    android:padding="3dp">
+    android:padding="12dp">
 
     <!-- Top Navigation Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/rounded_gray_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="8dp">
@@ -21,20 +21,22 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:background="#00836262"
             android:gravity="center"
             android:text="Publicaciones"
+            android:textColor="@android:color/black"
             android:textSize="20sp"
             android:textStyle="bold" />
-
     </LinearLayout>
 
     <!-- Top Bar with Profile and Date -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_gray_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="4dp">
+        android:padding="12dp">
 
         <ImageView
             android:layout_width="40dp"
@@ -47,13 +49,16 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:background="@drawable/rounded_gray_bg"
+            android:orientation="vertical"
+            android:padding="8dp">
 
             <TextView
                 android:id="@+id/reporterNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Nombre del Reportante"
+                android:text="Jose Angel Hernadez Santiago"
+                android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 
@@ -62,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Hace 2 horas"
-                android:textColor="@android:color/darker_gray"
+                android:textColor="@android:color/black"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
@@ -72,108 +77,117 @@
         android:id="@+id/petImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_gray_bg"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_pet" />
 
     <!-- Name, Breed, and Age -->
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:text="Nombre de la Mascota"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/breedTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:text="Raza"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/ageTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:text="Edad"
-        android:textSize="14sp" />
-
-    <!-- Description -->
-    <TextView
-        android:id="@+id/descriptionTextView"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="6dp"
-        android:text="Mascota perdida: Nombre, Raza, Edad."
-        android:textSize="14sp" />
+        android:background="@drawable/rounded_gray_bg"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/nameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Roky"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/breedTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="Chiquito"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/ageTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="4dp"
+            android:text="3 años"
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Description -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_gray_bg"
+        android:orientation="vertical"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/descriptionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="🐾 ¡MASCOTA PERDIDA! 🐾
+Última vez visto: 25/03/2024 en el Parque Central (Calle Principal #123, Colonia Las Flores)
+Características distintivas:
+
+Tiene un collar azul con una placa con su nombre.
+
+Le falta una pequeña parte de la oreja izquierda (por una cirugía previa).
+
+Es amigable pero puede estar asustado."
+            android:textColor="@android:color/black"
+            android:textSize="14sp" />
+    </LinearLayout>
 
     <!-- Action Buttons -->
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_gray_bg"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingTop="8dp">
+        android:padding="12dp">
 
         <Button
             android:id="@+id/likeButton"
-            android:layout_width="71dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:backgroundTint="#008855AA"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="1dp"
-            android:text="Comentar"
-            android:textColor="#FFFFFF"
-            android:textSize="8sp" />
+            android:drawablePadding="8dp"
+            android:text="like"
+            android:textColor="@color/material_dynamic_primary50"
+            android:textSize="0sp"
+            android:padding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
         <Button
             android:id="@+id/messageButton"
-            android:layout_width="85dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:backgroundTint="#008855AA"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/ic_comment"
-            android:text="Menssaje"
-            android:textColor="#FFFFFF"
-            android:textSize="7sp" />
-
-        <Button
-            android:id="@+id/commentButton"
-            android:layout_width="80dp"
-            android:layout_height="match_parent"
-            android:layout_weight="0"
-            android:backgroundTint="#008855AA"
-            android:drawableLeft="@drawable/ic_comment"
-            android:text="Comentar"
-            android:textColor="#FFFFFF"
-            android:textSize="7sp" />
+            android:drawablePadding="8dp"
+            android:text=""
+            android:textColor="@android:color/transparent"
+            android:textSize="0sp"
+            android:padding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
 
         <Button
             android:id="@+id/shareButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0"
-            android:backgroundTint="#008855AA"
-            android:drawableLeft="@drawable/ic_share"
-            android:text="share"
-            android:textColor="#FFFFFF"
-            android:textSize="7sp" />
-
-        <Button
-            android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@android:drawable/screen_background_dark_transparent"
-            android:drawableLeft="@android:drawable/screen_background_light_transparent"
-            android:drawablePadding="4dp"
-            android:text="Guardar"
-            android:textSize="12sp" />
+            android:drawableLeft="@drawable/ic_share"
+            android:drawablePadding="8dp"
+            android:text=""
+            android:textColor="@android:color/transparent"
+            android:textSize="0sp"
+            android:padding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless" />
     </LinearLayout>
-
 </LinearLayout>

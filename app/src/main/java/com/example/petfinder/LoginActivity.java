@@ -7,19 +7,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,11 +15,18 @@ public class LoginActivity extends AppCompatActivity {
     private Button loginButton;
     private TextView registerText;
     private TextView forgotPasswordText;
+    private PetDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        // Inicializar el helper de la base de datos
+        dbHelper = new PetDatabaseHelper(this);
+
+        // Forzar inicialización de la base de datos
+        dbHelper.getWritableDatabase().close();
 
         username = findViewById(R.id.username);
         password = findViewById(R.id.password);
@@ -39,7 +34,6 @@ public class LoginActivity extends AppCompatActivity {
         registerText = findViewById(R.id.register_text);
         forgotPasswordText = findViewById(R.id.forgot_password_button);
 
-        // Acción para el botón de login
         loginButton.setOnClickListener(view -> {
             String user = username.getText().toString().trim();
             String pass = password.getText().toString().trim();
@@ -47,61 +41,43 @@ public class LoginActivity extends AppCompatActivity {
             if (!user.isEmpty() && !pass.isEmpty()) {
                 login(user, pass);
             } else {
-                Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
+                showToast("Please enter both username and password");
             }
         });
-        // Configuración para el botón de "Olvidé mi contraseña"
+
         forgotPasswordText.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(LoginActivity.this, ForgotPasswordActivity.class));
         });
 
-        // Acción para el enlace de registro
         registerText.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
         });
     }
 
-    // Método para hacer login
     private void login(String username, String password) {
-        String url = "http://192.168.1.1/petfinder/login.php"; // URL del servidor para hacer login
+        try {
+            boolean isValid = dbHelper.validateUser(username, password);
 
-        // Enviar solicitud de inicio de sesión
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, url,
-                response -> {
-                    try {
-                        Log.d("LoginResponse", response);
-                        JSONObject jsonResponse = new JSONObject(response);
-
-                        String status = jsonResponse.getString("status");
-                        String message = jsonResponse.getString("message");
-
-                        if (status.equals("success")) {
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(LoginActivity.this, PetListActivity.class));
-                            finish();
-                        } else {
-                            Toast.makeText(LoginActivity.this, message, Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (JSONException e) {
-                        Toast.makeText(LoginActivity.this, "Invalid server response", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> {
-                    Toast.makeText(LoginActivity.this,"Server communication failed", Toast.LENGTH_SHORT).show();
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                 Map<String, String> params = new HashMap<>();
-                params.put("username", username);
-                params.put("password", password);
-                return params;
+            if (isValid) {
+                showToast("Login successful");
+                startActivity(new Intent(LoginActivity.this, PetListActivity.class));
+                finish();
+            } else {
+                showToast("Invalid username or password");
             }
-        };
+        } catch (Exception e) {
+            Log.e("LoginActivity", "Login error", e);
+            showToast("Login error. Please try again.");
+        }
+    }
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        dbHelper.close();
+        super.onDestroy();
     }
 }

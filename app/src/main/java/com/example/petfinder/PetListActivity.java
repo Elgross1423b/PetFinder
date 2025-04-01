@@ -5,25 +5,14 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.List;
-
 
 public class PetListActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private PetAdapter petAdapter;
     private List<Pet> petList;
+    private PetDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +20,9 @@ public class PetListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_pet_list);
 
         recyclerView = findViewById(R.id.recyclerView);
-        petList = new ArrayList<>();
+        databaseHelper = new PetDatabaseHelper(this);
+
+        petList = databaseHelper.getAllPets();
         petAdapter = new PetAdapter(petList, new PetAdapter.OnItemClickListener() {
             @Override
             public void onMessageClick(Pet pet) {
@@ -49,11 +40,6 @@ public class PetListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onSaveClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Publicación guardada: " + pet.getName(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
             public void onLikeClick(Pet pet) {
                 Toast.makeText(PetListActivity.this, "Te gusta: " + pet.getName(), Toast.LENGTH_SHORT).show();
             }
@@ -61,41 +47,5 @@ public class PetListActivity extends AppCompatActivity {
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(petAdapter);
-        fetchPets();
-    }
-
-    private void fetchPets() {
-        String url = "http://192.168.1.139/petfinder/get_pets.php";  // URL para obtener mascotas
-
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        JSONArray petsArray = new JSONArray(response);
-
-                        for (int i = 0; i < petsArray.length(); i++) {
-                            JSONObject petObject = petsArray.getJSONObject(i);
-                            Pet pet = new Pet(
-                                    petObject.getInt("id"),
-                                    petObject.getString("name"),
-                                    petObject.getString("breed"),
-                                    petObject.getString("age"),
-                                    petObject.getString("description"),
-                                    petObject.getString("reporterName"),
-                                    petObject.getString("imageUrl")
-                            );
-
-                            petList.add(pet);
-                        }
-
-                        petAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        Toast.makeText(PetListActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> Toast.makeText(PetListActivity.this, "Volley error", Toast.LENGTH_SHORT).show()
-        );
-
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
     }
 }
