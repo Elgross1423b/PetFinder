@@ -10,9 +10,8 @@ import android.util.Log
 class PetDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
     companion object {
-        // Configuración de la base de datos
         private const val DATABASE_NAME = "petfinder.db"
-        private const val DATABASE_VERSION = 2
+        private const val DATABASE_VERSION = 4
 
         // Tabla de usuarios
         private const val TABLE_USERS = "users"
@@ -32,10 +31,11 @@ class PetDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         private const val COLUMN_REPORTER = "reporter_name"
         private const val COLUMN_IMAGE = "image_url"
         private const val COLUMN_DATE = "date"
+        private const val COLUMN_LOCATION = "location"
+        private const val COLUMN_STATUS = "status"
 
-        // Sentencias SQL
         private const val CREATE_USERS_TABLE = """
-            CREATE TABLE IF NOT EXISTS $TABLE_USERS (
+            CREATE TABLE $TABLE_USERS (
                 $COLUMN_USER_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_USERNAME TEXT UNIQUE NOT NULL,
                 $COLUMN_PASSWORD TEXT NOT NULL,
@@ -45,7 +45,7 @@ class PetDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
         """
 
         private const val CREATE_PETS_TABLE = """
-            CREATE TABLE IF NOT EXISTS $TABLE_PETS (
+            CREATE TABLE $TABLE_PETS (
                 $COLUMN_PET_ID INTEGER PRIMARY KEY AUTOINCREMENT,
                 $COLUMN_NAME TEXT NOT NULL,
                 $COLUMN_BREED TEXT,
@@ -53,155 +53,133 @@ class PetDatabaseHelper(context: Context) : SQLiteOpenHelper(context, DATABASE_N
                 $COLUMN_DESCRIPTION TEXT,
                 $COLUMN_REPORTER TEXT,
                 $COLUMN_IMAGE TEXT,
-                $COLUMN_DATE TEXT DEFAULT CURRENT_TIMESTAMP
+                $COLUMN_DATE TEXT DEFAULT CURRENT_TIMESTAMP,
+                $COLUMN_LOCATION TEXT,
+                $COLUMN_STATUS TEXT DEFAULT 'perdido'
             )
         """
     }
 
     override fun onCreate(db: SQLiteDatabase) {
         try {
-            // Crear ambas tablas
             db.execSQL(CREATE_USERS_TABLE)
             db.execSQL(CREATE_PETS_TABLE)
-
-            // Insertar datos iniciales
             createDefaultAdminUser(db)
             insertSamplePets(db)
-
-            Log.d("PetDatabaseHelper", "Database created successfully")
+            Log.d("DB", "Database created successfully")
         } catch (e: Exception) {
-            Log.e("PetDatabaseHelper", "Error creating database", e)
+            Log.e("DB", "Error creating database", e)
         }
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         try {
-            db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
             db.execSQL("DROP TABLE IF EXISTS $TABLE_PETS")
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_USERS")
             onCreate(db)
-            Log.d("PetDatabaseHelper", "Database upgraded successfully")
         } catch (e: Exception) {
-            Log.e("PetDatabaseHelper", "Error upgrading database", e)
+            Log.e("DB", "Error upgrading database", e)
         }
     }
 
     private fun createDefaultAdminUser(db: SQLiteDatabase) {
         val values = ContentValues().apply {
-            put(COLUMN_USERNAME, "Admin")
-            put(COLUMN_PASSWORD, "Admin")
+            put(COLUMN_USERNAME, "admin")
+            put(COLUMN_PASSWORD, "admin123")
             put(COLUMN_EMAIL, "admin@petfinder.com")
         }
-
-        try {
-            val id = db.insert(TABLE_USERS, null, values)
-            if (id != -1L) {
-                Log.d("PetDatabaseHelper", "Default admin user created")
-            }
-        } catch (e: Exception) {
-            Log.e("PetDatabaseHelper", "Error creating admin user", e)
-        }
+        db.insert(TABLE_USERS, null, values)
     }
 
     private fun insertSamplePets(db: SQLiteDatabase) {
-        try {
-            db.execSQL("DELETE FROM $TABLE_PETS")
+        db.execSQL("DELETE FROM $TABLE_PETS")
 
-            val samplePets = listOf(
-                Pet(0, "Roky", "Chihuahua", "3 años",
-                    "Mascota perdida en el parque central",
-                    "Jose Angel Hernandez Santiago", "dog1"),
-                Pet(0, "Luna", "Golden Retriever", "2 años",
-                    "Perdida cerca del centro comercial",
-                    "María García López", "dog2"),
-                Pet(0, "Michi", "Siamés", "1 año",
-                    "Gato perdido en la colonia Centro",
-                    "Carlos Sánchez", "cat1")
-            )
+        val samplePets = listOf(
+            PetData("Roky", "Chihuahua", "3 años", "Perdido en parque central", "Jose Hernandez", "dog1", "Parque Central"),
+            PetData("Luna", "Golden Retriever", "2 años", "Perdida cerca del centro comercial", "María García", "dog2", "Centro Comercial"),
+            PetData("Max", "Labrador", "4 años", "Desaparecido en zona norte", "Roberto Jiménez", "dog3", "Zona Norte"),
+            PetData("Bella", "Bulldog Francés", "1 año", "Extraviada en parque de perros", "Ana Martínez", "dog4", "Parque Canino"),
+            PetData("Michi", "Siamés", "1 año", "Gato perdido en colonia Centro", "Carlos Sánchez", "cat1", "Colonia Centro"),
+            PetData("Luna", "Persa", "2 años", "Gata extraviada en Jardines", "Laura Fernández", "cat2", "Colonia Jardines"),
+            PetData("Simba", "Mestizo", "3 años", "Gato naranja cerca del mercado", "Pedro Ramírez", "cat3", "Mercado Central"),
+            PetData("Piolín", "Canario", "6 meses", "Pájaro escapado de jaula", "Sofía Castro", "bird1", "Avenida Principal"),
+            PetData("Nemo", "Pez Payaso", "1 año", "Pez perdido (pecera rota)", "Luis Mendoza", "fish1", "Calle Flores"),
+            PetData("Hoppy", "Conejo Enano", "8 meses", "Conejo escapado de jaula", "Elena Torres", "rabbit1", "Parque Infantil")
+        )
 
-            samplePets.forEach { pet ->
-                val values = ContentValues().apply {
-                    put(COLUMN_NAME, pet.name)
-                    put(COLUMN_BREED, pet.breed)
-                    put(COLUMN_AGE, pet.age)
-                    put(COLUMN_DESCRIPTION, pet.description)
-                    put(COLUMN_REPORTER, pet.reporterName)
-                    put(COLUMN_IMAGE, pet.imageUrl)
-                }
-                db.insert(TABLE_PETS, null, values)
+        samplePets.forEach { pet ->
+            ContentValues().apply {
+                put(COLUMN_NAME, pet.name)
+                put(COLUMN_BREED, pet.breed)
+                put(COLUMN_AGE, pet.age)
+                put(COLUMN_DESCRIPTION, pet.description)
+                put(COLUMN_REPORTER, pet.reporter)
+                put(COLUMN_IMAGE, pet.image)
+                put(COLUMN_LOCATION, pet.location)
+                put(COLUMN_STATUS, "perdido")
+                db.insert(TABLE_PETS, null, this)
             }
-            Log.d("DatabaseHelper", "Sample pets inserted successfully")
-        } catch (e: Exception) {
-            Log.e("DatabaseHelper", "Error inserting sample pets", e)
         }
     }
 
-    // Métodos para usuarios
     fun validateUser(username: String, password: String): Boolean {
         val db = readableDatabase
         val cursor = db.query(
             TABLE_USERS,
             arrayOf(COLUMN_USER_ID),
-            "$COLUMN_USERNAME = ? AND $COLUMN_PASSWORD = ?",
+            "$COLUMN_USERNAME=? AND $COLUMN_PASSWORD=?",
             arrayOf(username, password),
             null, null, null
         )
-
         val isValid = cursor.count > 0
         cursor.close()
         return isValid
     }
 
-    // Métodos para mascotas
+    fun createUser(username: String, password: String, email: String): Long {
+        val values = ContentValues().apply {
+            put(COLUMN_USERNAME, username)
+            put(COLUMN_PASSWORD, password)
+            put(COLUMN_EMAIL, email)
+        }
+        return writableDatabase.insert(TABLE_USERS, null, values)
+    }
+
     fun getAllPets(): List<Pet> {
         val pets = mutableListOf<Pet>()
         val db = readableDatabase
-        var cursor: Cursor? = null
+        val cursor = db.query(
+            TABLE_PETS,
+            null, null, null, null, null,
+            "$COLUMN_DATE DESC"
+        )
 
-        try {
-            cursor = db.query(
-                TABLE_PETS,
-                null, null, null, null, null,
-                "$COLUMN_DATE DESC"
-            )
-
-            while (cursor?.moveToNext() == true) {
-                pets.add(Pet(
-                    cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PET_ID)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_BREED)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AGE)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REPORTER)),
-                    cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
-                ))
-            }
-        } catch (e: Exception) {
-            Log.e("DatabaseHelper", "Error getting pets", e)
-        } finally {
-            cursor?.close()
-            db.close()
+        while (cursor.moveToNext()) {
+            pets.add(Pet(
+                cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_PET_ID)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_BREED)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AGE)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DESCRIPTION)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_REPORTER)),
+                cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_IMAGE))
+            ).apply {
+                location = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_LOCATION))
+                status = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_STATUS))
+                date = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_DATE))
+            })
         }
+        cursor.close()
         return pets
     }
 
-    fun addPet(pet: Pet): Long {
-        val db = writableDatabase
-        val values = ContentValues().apply {
-            put(COLUMN_NAME, pet.name)
-            put(COLUMN_BREED, pet.breed)
-            put(COLUMN_AGE, pet.age)
-            put(COLUMN_DESCRIPTION, pet.description)
-            put(COLUMN_REPORTER, pet.reporterName)
-            put(COLUMN_IMAGE, pet.imageUrl)
-        }
-
-        return try {
-            db.insert(TABLE_PETS, null, values)
-        } catch (e: Exception) {
-            Log.e("DatabaseHelper", "Error inserting pet", e)
-            -1L
-        } finally {
-            db.close()
-        }
-    }
+    data class PetData(
+        val name: String,
+        val breed: String,
+        val age: String,
+        val description: String,
+        val reporter: String,
+        val image: String,
+        val location: String
+    )
 }
