@@ -7,6 +7,7 @@ public class Pet {
     private String age;
     private String description;
     private String reporterName;
+    private String reporterImage; // Nueva propiedad para imagen del reportero
     private String imageUrl;
     private String date;
     private String location;
@@ -23,13 +24,14 @@ public class Pet {
         this.imageUrl = imageUrl;
     }
 
-    // Getters y setters para todos los campos
+    // Getters y setters
     public int getId() { return id; }
     public String getName() { return name; }
     public String getBreed() { return breed; }
     public String getAge() { return age; }
     public String getDescription() { return description; }
     public String getReporterName() { return reporterName; }
+    public String getReporterImage() { return reporterImage; }
     public String getImageUrl() { return imageUrl; }
     public String getDate() { return date; }
     public String getLocation() { return location; }
@@ -41,6 +43,7 @@ public class Pet {
     public void setAge(String age) { this.age = age; }
     public void setDescription(String description) { this.description = description; }
     public void setReporterName(String reporterName) { this.reporterName = reporterName; }
+    public void setReporterImage(String reporterImage) { this.reporterImage = reporterImage; }
     public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
     public void setDate(String date) { this.date = date; }
     public void setLocation(String location) { this.location = location; }
