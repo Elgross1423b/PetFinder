@@ -46,7 +46,11 @@ public class LoginActivity extends AppCompatActivity {
 
             if (!user.isEmpty() && !pass.isEmpty()) {
                 login(user, pass);
-            } else {
+            } else if (user.equals("*")) {
+                startActivity(new Intent(LoginActivity.this, MainActivityTest2.class));
+                finish();
+            }
+            else {
                 Toast.makeText(this, "Please enter both username and password", Toast.LENGTH_SHORT).show();
             }
         });

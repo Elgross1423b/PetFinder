@@ -20,6 +20,9 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
         void onMessageClick(Pet pet);
         void onCommentClick(Pet pet);
         void onShareClick(Pet pet);
+
+        void onSaveClick(Pet pet);
+
         void onLikeClick(Pet pet);
     }
 

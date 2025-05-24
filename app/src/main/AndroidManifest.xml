@@ -18,14 +18,17 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31" >
         <activity
+            android:name=".MainActivityTest2"
+            android:exported="false" />
+        <activity
             android:name=".NavegationActions"
             android:exported="false"
             android:label="@string/title_activity_navegation_actions"
             android:theme="@style/Theme.PetFinder.NoActionBar" />
 
         <meta-data
-            android:name="com.google.android.geo.AIzaSyBGqX7Hy3MDDwas-oi4o2r32RlgwcEdFVA"
-            android:value="AIzaSyBGqX7Hy3MDDwas-oi4o2r32RlgwcEdFVA" />
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDORfz_n8YkI0VNPuzyKp7GidXXi8pbwuI" />
 
         <activity
             android:name=".MainActivity"
