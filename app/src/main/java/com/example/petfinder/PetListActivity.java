@@ -1,101 +1,128 @@
 package com.example.petfinder;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.util.List;
-
-
+import android.content.Intent;
 public class PetListActivity extends AppCompatActivity {
 
+    private static final String TAG = "PetListActivity";
     private RecyclerView recyclerView;
     private PetAdapter petAdapter;
-    private List<Pet> petList;
+    private PetDatabaseHelper databaseHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_pet_list);
 
+        // Inicializar DatabaseHelper
+        databaseHelper = new PetDatabaseHelper(this);
+
+        // Forzar creación/actualización de BD
+        databaseHelper.getWritableDatabase().close();
+
+        // Configurar RecyclerView
         recyclerView = findViewById(R.id.recyclerView);
-        petList = new ArrayList<>();
-        petAdapter = new PetAdapter(petList, new PetAdapter.OnItemClickListener() {
-            @Override
-            public void onMessageClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Mensaje a: " + pet.getReporterName(), Toast.LENGTH_SHORT).show();
-            }
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-            @Override
-            public void onCommentClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Comentario en publicación de: " + pet.getName(), Toast.LENGTH_SHORT).show();
-            }
+        // Cargar mascotas
+        loadPets();
+    }
 
-            @Override
-            public void onShareClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Compartiendo publicación de: " + pet.getName(), Toast.LENGTH_SHORT).show();
-            }
+    private void loadPets() {
+        List<Pet> pets = databaseHelper.getAllPets();
+        Log.d(TAG, "Número de mascotas cargadas: " + pets.size());
 
-            @Override
-            public void onSaveClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Publicación guardada: " + pet.getName(), Toast.LENGTH_SHORT).show();
+        petAdapter = new PetAdapter(pets, new PetAdapter.OnItemClickListener() {
+            @Override public void onMessageClick(Pet pet) {
+                showToast("Contactar a: " + pet.getReporterName());
             }
-
-            @Override
-            public void onLikeClick(Pet pet) {
-                Toast.makeText(PetListActivity.this, "Te gusta: " + pet.getName(), Toast.LENGTH_SHORT).show();
+            @Override public void onCommentClick(Pet pet) {
+                showToast("Comentar sobre: " + pet.getName());
+            }
+            @Override public void onShareClick(Pet pet) {
+                sharePet(pet);
+            }
+            @Override public void onLikeClick(Pet pet) {
+                showToast("Like a: " + pet.getName());
             }
         });
 
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(petAdapter);
-        fetchPets();
     }
 
-    private void fetchPets() {
-        String url = "http://192.168.1.139/petfinder/get_pets.php";  // URL para obtener mascotas
+    private void sharePet(Pet pet) {
+        try {
+            // 1. Crear el texto que se compartirá
+            String shareText = "¡Mira esta mascota que encontré en PetFinder!\n\n" +
+                    "Nombre: " + pet.getName() + "\n" +
+                    "Tipo: " + pet.getBreed() + "\n" +
+                    "Raza: " + pet.getBreed() + "\n" +
+                    "Descripción: " + pet.getDescription() + "\n\n" +
+                    "Contacto: " + pet.getReporterName() + " - " + pet.getId();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                response -> {
-                    try {
-                        JSONArray petsArray = new JSONArray(response);
+            // 2. Obtener el ID del recurso de la imagen (asumiendo que pet.getImageName() devuelve "dog1", "cat1", etc.)
+            int imageResId = getResources().getIdentifier(
+                    pet.getImageUrl(),
+                    "drawable",
+                    getPackageName()
+            );
 
-                        for (int i = 0; i < petsArray.length(); i++) {
-                            JSONObject petObject = petsArray.getJSONObject(i);
-                            Pet pet = new Pet(
-                                    petObject.getInt("id"),
-                                    petObject.getString("name"),
-                                    petObject.getString("breed"),
-                                    petObject.getString("age"),
-                                    petObject.getString("description"),
-                                    petObject.getString("reporterName"),
-                                    petObject.getString("imageUrl")
-                            );
+            // 3. Si no hay imagen, compartir solo texto
+            if (imageResId == 0) {
+                Intent textShareIntent = new Intent(Intent.ACTION_SEND);
+                textShareIntent.setType("text/plain");
+                textShareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mascota encontrada: " + pet.getName());
+                textShareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                startActivity(Intent.createChooser(textShareIntent, "Compartir mascota"));
+                return;
+            }
 
-                            petList.add(pet);
-                        }
+            // 4. Obtener la URI de la imagen usando FileProvider
+            Uri imageUri = Uri.parse("android.resource://" + getPackageName() + "/" + imageResId);
 
-                        petAdapter.notifyDataSetChanged();
-                    } catch (JSONException e) {
-                        Toast.makeText(PetListActivity.this, "Error parsing JSON response", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> Toast.makeText(PetListActivity.this, "Volley error", Toast.LENGTH_SHORT).show()
-        );
+            // 5. Crear el Intent para compartir con imagen y texto
+            Intent shareIntent = new Intent(Intent.ACTION_SEND);
+            shareIntent.setType("image/*");
+            shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Mascota encontrada: " + pet.getName());
+            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+            shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-        requestQueue.add(stringRequest);
+            // 6. Mostrar el diálogo de compartir
+            startActivity(Intent.createChooser(shareIntent, "Compartir mascota"));
+
+        } catch (Exception e) {
+            Log.e(TAG, "Error al compartir mascota: " + e.getMessage());
+
+            // Fallback: compartir solo texto si hay error
+            Intent fallbackIntent = new Intent(Intent.ACTION_SEND);
+            fallbackIntent.setType("text/plain");
+            fallbackIntent.putExtra(Intent.EXTRA_SUBJECT, "Mascota encontrada: " + pet.getName());
+            fallbackIntent.putExtra(Intent.EXTRA_TEXT, "¡Mira esta mascota en PetFinder!\nNombre: " + pet.getName());
+            startActivity(Intent.createChooser(fallbackIntent, "Compartir mascota"));
+        }
+    }
+
+    private void showToast(String message) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    protected void onDestroy() {
+        databaseHelper.close();
+        super.onDestroy();
     }
 }

@@ -15,7 +15,6 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
     private List<Pet> petList;
     private final OnItemClickListener listener;
 
-    // Interfaz para manejar los clicks en los botones
     public interface OnItemClickListener {
         void onMessageClick(Pet pet);
         void onCommentClick(Pet pet);
@@ -41,8 +40,7 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull PetViewHolder holder, int position) {
-        Pet pet = petList.get(position);
-        holder.bind(pet, listener);
+        holder.bind(petList.get(position), listener);
     }
 
     @Override
@@ -50,68 +48,58 @@ public class PetAdapter extends RecyclerView.Adapter<PetAdapter.PetViewHolder> {
         return petList.size();
     }
 
-    // Método para actualizar la lista de mascotas
     public void updatePets(List<Pet> newPets) {
-        petList.clear();
-        petList.addAll(newPets);
+        petList = newPets;
         notifyDataSetChanged();
     }
 
-    // ViewHolder class
     static class PetViewHolder extends RecyclerView.ViewHolder {
-        ImageView petImageView;
-        TextView nameTextView, breedTextView, ageTextView;
-        TextView descriptionTextView, reporterNameTextView, dateTextView;
-        Button likeButton, messageButton, shareButton;
+        private final ImageView petImage;
+        private final ImageView reporterImage;
+        private final TextView nameText, breedText, ageText;
+        private final TextView reporterText, descriptionText, locationText;
+        private final Button likeBtn, messageBtn, shareBtn;
 
         public PetViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Inicializar vistas
-            petImageView = itemView.findViewById(R.id.petImageView);
-            nameTextView = itemView.findViewById(R.id.nameTextView);
-            breedTextView = itemView.findViewById(R.id.breedTextView);
-            ageTextView = itemView.findViewById(R.id.ageTextView);
-            descriptionTextView = itemView.findViewById(R.id.descriptionTextView);
-            reporterNameTextView = itemView.findViewById(R.id.reporterNameTextView);
-            dateTextView = itemView.findViewById(R.id.dateTextView);
-            likeButton = itemView.findViewById(R.id.likeButton);
-            messageButton = itemView.findViewById(R.id.messageButton);
-            shareButton = itemView.findViewById(R.id.shareButton);
+            petImage = itemView.findViewById(R.id.petImageView);
+            reporterImage = itemView.findViewById(R.id.reporterImageView);
+            nameText = itemView.findViewById(R.id.nameTextView);
+            breedText = itemView.findViewById(R.id.breedTextView);
+            ageText = itemView.findViewById(R.id.ageTextView);
+            reporterText = itemView.findViewById(R.id.reporterNameTextView);
+            descriptionText = itemView.findViewById(R.id.descriptionTextView);
+            locationText = itemView.findViewById(R.id.locationTextView);
+            likeBtn = itemView.findViewById(R.id.likeButton);
+            messageBtn = itemView.findViewById(R.id.messageButton);
+            shareBtn = itemView.findViewById(R.id.shareButton);
         }
 
         public void bind(final Pet pet, final OnItemClickListener listener) {
-            // Configurar los datos de la mascota en las vistas
-            nameTextView.setText(pet.getName());
-            breedTextView.setText(pet.getBreed());
-            ageTextView.setText(pet.getAge());
-            descriptionTextView.setText(pet.getDescription());
-            reporterNameTextView.setText(pet.getReporterName());
-            dateTextView.setText("Hoy"); // Puedes cambiar esto según tus datos
+            nameText.setText(pet.getName());
+            breedText.setText(pet.getBreed());
+            ageText.setText(pet.getAge());
+            descriptionText.setText(pet.getDescription());
+            reporterText.setText(pet.getReporterName());
+            locationText.setText("Ubicación: " + pet.getLocation());
 
-            // Configurar la imagen
-            try {
-                int imageResId = itemView.getContext().getResources()
-                        .getIdentifier(pet.getImageUrl(), "drawable",
-                                itemView.getContext().getPackageName());
+            // Cargar imagen de la mascota
+            int petImageResId = itemView.getContext().getResources()
+                    .getIdentifier(pet.getImageUrl(), "drawable",
+                            itemView.getContext().getPackageName());
+            petImage.setImageResource(petImageResId != 0 ? petImageResId : R.drawable.ic_pet);
 
-                if (imageResId != 0) {
-                    petImageView.setImageResource(imageResId);
-                } else {
-                    // Imagen por defecto si no se encuentra
-                    petImageView.setImageResource(R.drawable.ic_pet);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-                petImageView.setImageResource(R.drawable.ic_pet);
-            }
+            // Cargar imagen del reportero
+            int reporterImageResId = itemView.getContext().getResources()
+                    .getIdentifier(pet.getReporterImage(), "drawable",
+                            itemView.getContext().getPackageName());
+            reporterImage.setImageResource(reporterImageResId != 0 ? reporterImageResId : R.drawable.ic_profile);
 
-            // Configurar los listeners de los botones
-            likeButton.setOnClickListener(v -> listener.onLikeClick(pet));
-            messageButton.setOnClickListener(v -> listener.onCommentClick(pet));
-            shareButton.setOnClickListener(v -> listener.onShareClick(pet));
-
-            // También puedes configurar el clic en toda la tarjeta si lo deseas
-            itemView.setOnClickListener(v -> listener.onMessageClick(pet));
+            // Listeners
+            likeBtn.setOnClickListener(v -> listener.onLikeClick(pet));
+            messageBtn.setOnClickListener(v -> listener.onMessageClick(pet));
+            shareBtn.setOnClickListener(v -> listener.onShareClick(pet));
+            itemView.setOnClickListener(v -> listener.onCommentClick(pet));
         }
     }
 }

@@ -8,38 +8,16 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <!-- Top Navigation Bar -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="@drawable/rounded_gray_bg"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp">
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@android:color/system_outline_disabled"
-            android:gravity="center"
-            android:text="Publicaciones"
-            android:textColor="@android:color/black"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-    </LinearLayout>
-
     <!-- Top Bar with Profile and Date -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_gray_bg"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="12dp">
 
         <ImageView
+            android:id="@+id/reporterImageView"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginEnd="8dp"
@@ -50,15 +28,12 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_gray_bg"
-            android:orientation="vertical"
-            android:padding="8dp">
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/reporterNameTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Jose Angel Hernadez Santiago"
                 android:textColor="@android:color/black"
                 android:textSize="16sp"
                 android:textStyle="bold" />
@@ -67,19 +42,17 @@
                 android:id="@+id/dateTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hace 2 horas"
                 android:textColor="@android:color/black"
                 android:textSize="12sp" />
         </LinearLayout>
     </LinearLayout>
 
-    <!-- Image -->
+    <!-- Pet Image -->
     <ImageView
         android:id="@+id/petImageView"
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/rounded_gray_bg"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_pet" />
 
@@ -87,7 +60,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_gray_bg"
         android:orientation="vertical"
         android:padding="8dp">
 
@@ -96,7 +68,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="Roky"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
 
@@ -105,7 +76,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="Chiquito"
             android:textSize="14sp" />
 
         <TextView
@@ -113,41 +83,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
-            android:text="3 años"
             android:textColor="@android:color/black"
             android:textSize="14sp" />
     </LinearLayout>
 
-    <!-- Description -->
-    <LinearLayout
+    <!-- Location -->
+    <TextView
+        android:id="@+id/locationTextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_gray_bg"
-        android:orientation="vertical"
-        android:padding="12dp">
+        android:layout_marginBottom="4dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="🐾 ¡MASCOTA PERDIDA! 🐾
-Última vez visto: 25/03/2024 en el Parque Central (Calle Principal #123, Colonia Las Flores)
-Características distintivas:
-
-Tiene un collar azul con una placa con su nombre.
-
-Le falta una pequeña parte de la oreja izquierda (por una cirugía previa).
-
-Es amigable pero puede estar asustado."
-            android:textColor="@android:color/black"
-            android:textSize="14sp" />
-    </LinearLayout>
+    <!-- Description -->
+    <TextView
+        android:id="@+id/descriptionTextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="14sp" />
 
     <!-- Action Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/rounded_gray_bg"
         android:gravity="center"
         android:orientation="horizontal"
         android:padding="12dp">
@@ -155,37 +116,40 @@ Es amigable pero puede estar asustado."
         <Button
             android:id="@+id/likeButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_like"
-            android:drawablePadding="4dp"
-            android:text="Me gusta"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:drawablePadding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:text="like"
+            android:textColor="@color/material_dynamic_primary50"
+            android:textSize="0sp" />
 
         <Button
             android:id="@+id/messageButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_comment"
-            android:drawablePadding="4dp"
-            android:text="Mensaje"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:drawablePadding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:text=""
+            android:textColor="@android:color/transparent"
+            android:textSize="0sp" />
 
         <Button
             android:id="@+id/shareButton"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="48dp"
             android:layout_weight="1"
-            android:background="@drawable/rounded_button_bg"
             android:drawableLeft="@drawable/ic_share"
-            android:drawablePadding="4dp"
-            android:text="Compartir"
-            android:textColor="@android:color/black"
-            android:textSize="12sp" />
+            android:drawablePadding="8dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="8dp"
+            android:text=""
+            android:textColor="@android:color/transparent"
+            android:textSize="0sp" />
     </LinearLayout>
 </LinearLayout>
