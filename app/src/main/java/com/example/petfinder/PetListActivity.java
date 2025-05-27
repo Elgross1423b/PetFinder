@@ -58,7 +58,12 @@ public class PetListActivity extends AppCompatActivity {
             @Override public void onLikeClick(Pet pet) {
                 showToast("Like a: " + pet.getName());
             }
+            @Override public void onSaveClick(Pet pet) {
+                showToast("Guardado: " + pet.getName());
+                // O cualquier otra acción que desees implementar
+            }
         });
+
 
         recyclerView.setAdapter(petAdapter);
     }

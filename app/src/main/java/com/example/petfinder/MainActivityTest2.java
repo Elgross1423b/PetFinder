@@ -31,15 +31,18 @@ public class MainActivityTest2 extends AppCompatActivity {
             return insets;
         });
 
+
+
         // Referencia al BottomNavigationView
         BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView3);
         bottomNav.setOnItemSelectedListener(item -> {
             Fragment selectedFragment = null;
             int itemId = item.getItemId();
 
+
             // Selecciona el fragment según el ítem del menú
             if (itemId == R.id.nav_publicaciones) {
-                selectedFragment = new HomeFragment(); // Reemplaza con tu Fragment
+                selectedFragment = new Fragment_Pet_List(); // Reemplaza con tu Fragment
             } else if (itemId == R.id.nav_mapas) {
                 selectedFragment = new mainMaps_Fragment(); // Reemplaza con tu Fragment
             } /*else if (itemId == R.id.nav_profile) {
@@ -60,6 +63,7 @@ public class MainActivityTest2 extends AppCompatActivity {
         // Carga el fragment inicial (opcional)
         if (savedInstanceState == null) {
             bottomNav.setSelectedItemId(R.id.nav_home); // Establece el ítem inicial
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new Fragment_Pet_List()).commit();
         }
     }
 }
