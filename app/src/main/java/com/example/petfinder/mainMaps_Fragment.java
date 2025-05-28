@@ -1,54 +1,41 @@
 package com.example.petfinder;
 
 import android.os.Bundle;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+
+import com.google.android.gms.maps.*;
+import com.google.android.gms.maps.model.*;
+import com.google.firebase.database.*;
 
 public class mainMaps_Fragment extends Fragment implements OnMapReadyCallback {
+
     private GoogleMap mMap;
-    private EditText latText, lngText;
-    private Button btnShowLocation;
+    private DatabaseReference databaseRef;
+    private Marker currentMarker;
+    private LatLng lastLocation = null;
+    private boolean isTrackingEnabled = false;
 
-    public mainMaps_Fragment() {
-        // Required empty public constructor
-    }
+    private Switch trackingSwitch;
 
-    public static mainMaps_Fragment newInstance(String param1, String param2) {
-        mainMaps_Fragment fragment = new mainMaps_Fragment();
-        Bundle args = new Bundle();
-        args.putString("param1", param1);
-        args.putString("param2", param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
+    public mainMaps_Fragment() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_main_maps_, container, false);
 
-        // Referencias a los elementos de la UI
-        latText = view.findViewById(R.id.latText);
-        lngText = view.findViewById(R.id.lngText);
-        btnShowLocation = view.findViewById(R.id.btnShowLocation);
+        // Referencia a Switch
+        trackingSwitch = view.findViewById(R.id.trackingSwitch);
+        trackingSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            isTrackingEnabled = isChecked;
+        });
 
         // Configurar el mapa
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
@@ -57,39 +44,57 @@ public class mainMaps_Fragment extends Fragment implements OnMapReadyCallback {
             mapFragment.getMapAsync(this);
         }
 
-        // Botón para actualizar la ubicación en el mapa
-        btnShowLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                updateMapLocation();
-            }
-        });
+        // Referencia a Firebase
+        databaseRef = FirebaseDatabase.getInstance().getReference("tracker");
 
         return view;
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
+    public void onMapReady(@NonNull GoogleMap googleMap) {
         mMap = googleMap;
-        // Ubicación inicial (Ciudad de México)
-        LatLng initialLocation = new LatLng(19.3453, -99.1711);
-        mMap.addMarker(new MarkerOptions().position(initialLocation).title("Ciudad de México"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 12f));
-    }
 
-    private void updateMapLocation() {
-        if (mMap != null) {
-            try {
-                double lat = Double.parseDouble(latText.getText().toString());
-                double lng = Double.parseDouble(lngText.getText().toString());
-                LatLng newLocation = new LatLng(lat, lng);
-                mMap.clear();  // Limpiar marcadores anteriores
-                mMap.addMarker(new MarkerOptions().position(newLocation).title("Nueva Ubicación"));
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 12f));
-            } catch (NumberFormatException e) {
-                latText.setError("Ingresa una latitud válida");
-                lngText.setError("Ingresa una longitud válida");
+        LatLng initialLocation = new LatLng(19.3453, -99.1711);
+        currentMarker = mMap.addMarker(new MarkerOptions()
+                .position(initialLocation)
+                .title("Esperando coordenadas..."));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(initialLocation, 12f));
+
+        databaseRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Double lat = snapshot.child("lat").getValue(Double.class);
+                Double lng = snapshot.child("lng").getValue(Double.class);
+
+                if (lat != null && lng != null) {
+                    LatLng newLocation = new LatLng(lat, lng);
+
+                    if (currentMarker != null) currentMarker.remove();
+                    currentMarker = mMap.addMarker(new MarkerOptions()
+                            .position(newLocation)
+                            .title("Ubicación actual"));
+                    mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(newLocation, 15f));
+
+                    // Rastro solo si el switch está activado y ha recorrido más de 5 metros
+                    if (isTrackingEnabled && lastLocation != null) {
+                        float[] results = new float[1];
+                        android.location.Location.distanceBetween(
+                                lastLocation.latitude, lastLocation.longitude,
+                                newLocation.latitude, newLocation.longitude, results);
+
+                        if (results[0] > 5f) {
+                            mMap.addPolyline(new PolylineOptions()
+                                    .add(lastLocation, newLocation)
+                                    .color(0xFFFF4081) // color rosa pastel
+                                    .width(8f));
+                        }
+                    }
+                    lastLocation = newLocation;
+                }
             }
-        }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
     }
 }

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "102739391293",
-    "project_id": "raspet-f22d5",
-    "storage_bucket": "raspet-f22d5.firebasestorage.app"
+    "project_number": "842591262941",
+    "project_id": "sample-firebase-ai-app-c9562",
+    "storage_bucket": "sample-firebase-ai-app-c9562.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:102739391293:android:de7e326016dca2b6190b54",
+        "mobilesdk_app_id": "1:842591262941:android:878b0cb032953dda8ee334",
         "android_client_info": {
           "package_name": "com.example.petfinder"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyAZMxpLf-hHbNQdMniJ3yhVUzf0VjzTfGc"
+          "current_key": "AIzaSyCE7TbCMDva2jBAa_QDgYIUslYW35ODWwk"
         }
       ],
       "services": {
